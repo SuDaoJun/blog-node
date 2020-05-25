@@ -93,4 +93,4 @@ npm run dev
 
 > [后端：https://github.com/SuDaoJun/blog-node](https://github.com/SuDaoJun/blog-node)
 
-> [博客地址：http://47.112.104.1/](http://47.112.104.1/)
+> [博客地址：http://sdjBlog.cn/](http://sdjBlog.cn/)
