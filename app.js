@@ -2,10 +2,11 @@ const Koa = require('koa')
 const app = new Koa()
 const json = require('koa-json')
 const onerror = require('koa-onerror')
-const bodyparser = require('koa-bodyparser')
+const bodyparser = require('koa-body')
 const cors = require('koa2-cors')
 // const history = require('connect-history-api-fallback')
 const router = require('./routers')
+const logger = require("koa-logger"); 
 const utils = require('./config/utils')
 
 // 跨域处理
@@ -21,6 +22,7 @@ app.use(
       exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'] //设置获取其他自定义字段
   })
 )
+app.use(logger());
 // error handler
 onerror(app)
 // 前端使用history模式
@@ -29,7 +31,7 @@ onerror(app)
 // }))
 // middlewares
 app.use(bodyparser({
-  enableTypes:['json', 'form', 'text'],
+  multipart:true,
   jsonLimit: '30mb',
   formLimit: '30mb',
 }))
@@ -54,7 +56,6 @@ router(app)
 // error-handling
 app.on('error', (err, ctx) => {
   utils.severErr(err, ctx)
-  console.error('server error', err, ctx)
 });
 
 module.exports = app
