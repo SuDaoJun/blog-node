@@ -22,9 +22,7 @@ module.exports = app => {
     '/blogPage/comment/list',
     '/blogPage/statement/list',
     '/blogPage/project/list',
-    '/blogPage/link/list',
-    '/file/down', 
-    '/file/down/',
+    '/blogPage/link/list'
   ]
   app.use( async(ctx, next)=> {
     let {request:req, response:res} = ctx

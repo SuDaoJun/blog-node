@@ -112,6 +112,14 @@ function objProp(data, path){
   }
   return data
 }
+// 转化时间戳
+function timeValue(time = '') {
+  if(time){
+    return moment(time).valueOf()
+  }else{
+    return moment().valueOf()
+  }
+}
 // 当前时间
 function currentDayDate(type = 'time'){
   if(type === 'day'){
@@ -219,6 +227,7 @@ module.exports = {
   sendEmail,
   currentDayDate,
   timeDiff,
+  timeValue,
   weekArry,
   weekFirstLast,
   monthFirstLast,
