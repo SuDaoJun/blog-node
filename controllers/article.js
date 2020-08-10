@@ -1,6 +1,7 @@
 const Article = require("../models/article");
 const Tag = require("../models/tag");
 const Comment = require("../models/comment");
+const ReplyComment = require("../models/replyComment");
 const CONSTANT = require('../config/constant');
 const RES_CODE = CONSTANT.RES_CODE
 const ROLE_TYPE = CONSTANT.ROLE_TYPE
@@ -144,8 +145,16 @@ class ArticleCtl{
     docs?utils.responseClient(ctx, RES_CODE.reqSuccess, "更新文章成功"):utils.responseClient(ctx, RES_CODE.dataFail, "更新文章失败")
   }
   async articleDel (ctx){
-    let docs = await Article.findByIdAndRemove(ctx.params.id)
-    docs?utils.responseClient(ctx, RES_CODE.reqSuccess, "删除文章成功"):utils.responseClient(ctx, RES_CODE.dataFail, "删除文章失败")
+    let id = ctx.params.id
+    let docs = await Article.findByIdAndRemove(id)
+    if(docs){
+      utils.responseClient(ctx, RES_CODE.reqSuccess, "删除文章成功")
+      await Comment.deleteMany({articleId: id})
+      await ReplyComment.deleteMany({articleId: id})
+      
+    }else{
+      utils.responseClient(ctx, RES_CODE.dataFail, "删除文章失败")
+    }
   }
 }
 module.exports = new ArticleCtl()

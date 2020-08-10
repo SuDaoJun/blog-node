@@ -3,6 +3,12 @@ const Schema = mongoose.Schema;
 const moment = require('moment');
 const replyCommentSchema = new Schema(
   {
+    // 评论所在的文章 id
+    articleId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Article',
+      required: true
+    },
     commentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Comment',

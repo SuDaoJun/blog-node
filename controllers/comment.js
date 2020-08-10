@@ -110,21 +110,19 @@ class CommentCtl{
   // 删除一级评论
   async commentDel(ctx){
     let { id } = ctx.params
-    let result = await Comment.findById(id)
-    if(result.replyCommentNum === 0){
-      let docs = await Comment.findByIdAndRemove(id)
-      if (docs) {
-        if(docs.status === '1'){
-          let updateResult = await Article.findByIdAndUpdate(docs.articleId, {$inc: {'meta.commentTotal': -1}, $pull: {commentList: id}}, { new: true })
-          updateResult ? utils.responseClient(ctx, RES_CODE.reqSuccess, "删除文章评论成功") : utils.responseClient(ctx, RES_CODE.dataFail, "删除文章评论失败")
-        }else{
-          utils.responseClient(ctx, RES_CODE.reqSuccess, "删除文章评论成功")
-        }
-      } else {
-        utils.responseClient(ctx, RES_CODE.dataFail, "删除文章评论失败")
+    let docs = await Comment.findByIdAndRemove(id)
+    if (docs) {
+      if(docs.status === '1'){
+        let updateResult = await Article.findByIdAndUpdate(docs.articleId, {$inc: {'meta.commentTotal': -1}, $pull: {commentList: id}}, { new: true })
+        updateResult ? utils.responseClient(ctx, RES_CODE.reqSuccess, "删除文章评论成功") : utils.responseClient(ctx, RES_CODE.dataFail, "删除文章评论失败")
+      }else{
+        utils.responseClient(ctx, RES_CODE.reqSuccess, "删除文章评论成功")
       }
-    }else{
-      utils.responseClient(ctx, RES_CODE.dataAlready, "请先删除回复评论")
+      if(docs.replyCommentList.length > 0){
+        await ReplyCommentList.deleteMany({commentId: id})
+      }
+    } else {
+      utils.responseClient(ctx, RES_CODE.dataFail, "删除文章评论失败")
     }
   }
 }
