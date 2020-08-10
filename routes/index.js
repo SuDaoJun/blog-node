@@ -132,5 +132,4 @@ module.exports = app => {
   app.get(basePageUrl + '/project/list', project.projectList)
   app.get(basePageUrl + '/link/list', link.linkList)
   app.post(basePageUrl + '/message/add', message.messageAdd)
-  app.get('/file/down', upload.downFile)
 }

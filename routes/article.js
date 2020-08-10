@@ -1,4 +1,6 @@
 const Article = require("../models/article");
+const Comment = require("../models/comment");
+const ReplyComment = require("../models/replyComment");
 const CONSTANT = require('../config/constant');
 const RES_CODE = CONSTANT.RES_CODE
 const ROLE_TYPE = CONSTANT.ROLE_TYPE
@@ -110,11 +112,20 @@ exports.articleUpdate = (req, res) => {
 }
 
 exports.articleDel = (req, res) => {
-  Article.findByIdAndRemove(req.params.id,function (err, docs){
+  let id = req.params.id
+  Article.findByIdAndRemove(id,function (err, docs){
     if(err){
       return utils.severErr(err, res)
     }
-    docs?utils.responseClient(res, RES_CODE.reqSuccess, "删除文章成功"):utils.responseClient(res, RES_CODE.dataFail, "删除文章失败")
+    if(docs){
+      Comment.deleteMany({articleId: id}, function(commentErr, commentDoc){
+      })
+      ReplyComment.deleteMany({articleId: id}, function(replyCommentErr, replyCommentDoc){
+      })
+      utils.responseClient(res, RES_CODE.reqSuccess, "删除文章成功")
+    }else{
+      utils.responseClient(res, RES_CODE.dataFail, "删除文章失败")
+    }
   })
 }
 

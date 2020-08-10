@@ -33,9 +33,7 @@ module.exports = app => {
     '/blogPage/comment/list',
     '/blogPage/statement/list',
     '/blogPage/project/list',
-    '/blogPage/link/list',
-    '/file/down', 
-    '/file/down/',
+    '/blogPage/link/list'
   ]
   app.use(function(req, res, next) {
     let url = req.url.indexOf('?') > -1?req.url.split('?')[0]:req.url

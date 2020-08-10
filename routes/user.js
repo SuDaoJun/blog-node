@@ -353,6 +353,12 @@ exports.userUpdate = (req, res) => {
             } else if (doc[i].email !== body.email) {
               return utils.responseClient(res, RES_CODE.statusFail, "邮箱已存在")
             }
+          }else{
+            if (doc[i].name === body.name) {
+              return utils.responseClient(res, RES_CODE.dataAlready, "用户名已存在")
+            } else if (doc[i].email === body.email) {
+              return utils.responseClient(res, RES_CODE.statusFail, "邮箱已存在")
+            }
           }
         }
       }

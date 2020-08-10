@@ -1,4 +1,5 @@
 const Comment = require("../models/comment");
+const ReplyComment = require("../models/replyComment");
 const Article = require("../models/article");
 const CONSTANT = require('../config/constant');
 const RES_CODE = CONSTANT.RES_CODE
@@ -141,35 +142,29 @@ exports.commentSticky = (req, res) => {
     updateResult?utils.responseClient(res, RES_CODE.reqSuccess, "置顶更换成功", updateResult):utils.responseClient(res, RES_CODE.dataFail, "置顶更换失败")
   })
 }
-// 删除一级评论
+// 删除一级评论及其回复评论
 exports.commentDel = (req, res) => {
   let { id } = req.params
-  Comment.findById(id, function(findErr, result){
-    if (findErr) {
-      return utils.severErr(findErr, res)
+  Comment.findByIdAndRemove(id, function (err, docs) {
+    if (err) {
+      return utils.severErr(err, res)
     }
-    if(result.replyCommentNum === 0){
-      Comment.findByIdAndRemove(id, function (err, docs) {
-        if (err) {
-          return utils.severErr(err, res)
-        }
-        if (docs) {
-          if(docs.status === '1'){
-            Article.findByIdAndUpdate(docs.articleId, {$inc: {'meta.commentTotal': -1}, $pull: {commentList: id}}, { new: true }, function (errs, updateResult) {
-              if (errs) {
-                return utils.severErr(errs, res)
-              }
-              updateResult ? utils.responseClient(res, RES_CODE.reqSuccess, "删除文章评论成功") : utils.responseClient(res, RES_CODE.dataFail, "删除文章评论失败")
-            })
-          }else{
-            utils.responseClient(res, RES_CODE.reqSuccess, "删除文章评论成功")
+    if (docs) {
+      if(docs.status === '1'){
+        Article.findByIdAndUpdate(docs.articleId, {$inc: {'meta.commentTotal': -1}, $pull: {commentList: id}}, { new: true }, function (errs, updateResult) {
+          if (errs) {
+            return utils.severErr(errs, res)
           }
-        } else {
-          utils.responseClient(res, RES_CODE.dataFail, "删除文章评论失败")
-        }
-      })
-    }else{
-      utils.responseClient(res, RES_CODE.dataAlready, "请先删除回复评论")
+          updateResult ? utils.responseClient(res, RES_CODE.reqSuccess, "删除文章评论成功") : utils.responseClient(res, RES_CODE.dataFail, "删除文章评论失败")
+        })
+      }else{
+        utils.responseClient(res, RES_CODE.reqSuccess, "删除文章评论成功")
+      }
+      if(docs.replyCommentList.length > 0){
+        ReplyComment.deleteMany({commentId: id}, function(removeErr, removeDoc){})
+      }
+    } else {
+      utils.responseClient(res, RES_CODE.dataFail, "删除文章评论失败")
     }
   })
 }
