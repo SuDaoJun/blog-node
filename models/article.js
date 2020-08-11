@@ -18,6 +18,12 @@ const articleSchema = new Schema(
         return val.length < 100
       }
     },
+    // 文章编辑器 => 0 富文本，1 markdown
+    contentType: {
+      type: String,
+      default: '0',
+      enum: ['0', '1']
+    },
     content: {
       type: String,
       required: true
