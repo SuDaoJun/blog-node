@@ -28,6 +28,11 @@ const articleSchema = new Schema(
       type: String,
       required: true
     },
+    // markdown内容
+    markContent: {
+      type: String,
+      default: ''
+    },
     // 封面图片
     imgId: {
       type: String,
