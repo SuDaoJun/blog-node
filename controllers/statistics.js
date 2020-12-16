@@ -518,5 +518,28 @@ class StatisticsCtr{
     ])
     data?utils.responseClient(ctx, RES_CODE.reqSuccess, "随机获取留言列表", data):utils.responseClient(ctx, RES_CODE.dataFail, "随机获取留言列表失败")
   }
+  // 随机获取n条文章数
+  async randomArticle(ctx){
+    let req = ctx.request
+    let num = parseInt(req.query.num) || 10
+    let data = await Article.aggregate([
+      {
+        $match: {
+          status: '1'
+        }
+      },
+      {
+        $sample: {
+          size: num
+        }
+      },
+      {
+        $project: {
+          title: 1
+        }
+      },
+    ])
+    data?utils.responseClient(ctx, RES_CODE.reqSuccess, "随机获取文章成功", data):utils.responseClient(ctx, RES_CODE.dataFail, "随机获取文章失败")
+  }
 }
 module.exports = new StatisticsCtr()

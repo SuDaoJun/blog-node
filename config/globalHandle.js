@@ -17,6 +17,7 @@ module.exports = app => {
     '/blogPage/statistics/tagList',
     '/blogPage/statistics/articleArchive',
     '/blogPage/statistics/randomMessage',
+    '/blogPage/statistics/randomArticle',
     '/blogPage/article/list',
     '/blogPage/article/detail',
     '/blogPage/comment/list',

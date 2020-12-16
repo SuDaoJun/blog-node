@@ -1,6 +1,6 @@
 const Router = require('koa-router')
 const router =  new Router()
-const { countTotalNum, accessUserStatistics, userStatistics, articleStatistics, messageStatistics, accessUserList, userList, articleList, messageList, tagList, articleArchive, randomMessage} = require('../controllers/statistics')
+const { countTotalNum, accessUserStatistics, userStatistics, articleStatistics, messageStatistics, accessUserList, userList, articleList, messageList, tagList, articleArchive, randomMessage, randomArticle} = require('../controllers/statistics')
 
 const baseUrl = '/blogAdmin'
 const basePageUrl = '/blogPage'
@@ -18,5 +18,6 @@ router.get(baseUrl + '/statistics/tagList', tagList)
 router.get(basePageUrl + '/statistics/tagList', tagList)
 router.get(basePageUrl + '/statistics/articleArchive', articleArchive)
 router.get(basePageUrl + '/statistics/randomMessage', randomMessage)
+router.get(basePageUrl + '/statistics/randomArticle', randomArticle)
 
 module.exports = router
