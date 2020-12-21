@@ -40,8 +40,10 @@ class MessageCtl{
     let body = req.body
     let conditions =  utils.completeSelect(body)
     let userMessage = req.tokenMessage.userMessage
-    if(!userMessage.functionList.includes('5e834fbdfb69305aa091e833')){
-      return utils.responseClient(ctx, RES_CODE.dataFail, "无该功能权限")
+    if(req.url.indexOf('blogPage') === -1){
+      if(!userMessage.functionList.includes('5e834fbdfb69305aa091e833')){
+        return utils.responseClient(ctx, RES_CODE.dataFail, "无该功能权限")
+      }
     }
     conditions.createUser = userMessage.id
     let newMessage = new Message(conditions)
