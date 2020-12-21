@@ -10,6 +10,11 @@ class RoleCtl{
     let conditions =  utils.blurSelect(req.query)
     let pageObj =  utils.pageSelect(req.query)
     let userMessage = req.tokenMessage.userMessage
+    if(!pageObj.sort){
+      pageObj.sort = {
+        createTime: '-1'
+      }
+    }
     if(!userMessage.functionList.includes('5e99c2c2d1ba729a78b016c0')){
       return utils.responseClient(ctx, RES_CODE.dataFail, "无该功能权限")
     }

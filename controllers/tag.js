@@ -9,6 +9,11 @@ class TagCtr{
     let req = ctx.request
     let conditions =  utils.blurSelect(req.query)
     let pageObj =  utils.pageSelect(req.query)
+    if(!pageObj.sort){
+      pageObj.sort = {
+        createTime: '-1'
+      }
+    }
     let userMessage = req.tokenMessage.userMessage
     if(userMessage.roleId !== ROLE_TYPE.superRole){
       conditions['createUser.mark'] = userMessage.mark

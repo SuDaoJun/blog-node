@@ -432,6 +432,7 @@ class StatisticsCtr{
           title: 1,
           'articleTag._id': 1,
           'articleTag.name': 1,
+          'articleTag.description': 1,
           'articleTag.bgColor': 1
         }
       },
@@ -440,6 +441,7 @@ class StatisticsCtr{
           _id: {
             "id": "$articleTag._id",
             "name": "$articleTag.name",
+            "description": "$articleTag.description",
             "bgColor": "$articleTag.bgColor"
           },
           count: { $sum: 1 }

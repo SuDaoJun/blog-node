@@ -8,13 +8,22 @@ class MessageCtl{
     let req = ctx.request
     let conditions =  utils.blurSelect(req.query)
     let pageObj =  utils.pageSelect(req.query)
-    let userMessage = req.tokenMessage.userMessage
-    if(!userMessage.functionList.includes('5e99c1edd1ba729a78b016bb')){
-      return utils.responseClient(ctx, RES_CODE.dataFail, "无该功能权限")
+    if(req.url.indexOf('blogPage') === -1){
+      let userMessage = req.tokenMessage.userMessage
+      if(!userMessage.functionList.includes('5e99c1edd1ba729a78b016bb')){
+        return utils.responseClient(ctx, RES_CODE.dataFail, "无该功能权限")
+      }
+    }else{
+      conditions.status = '1'
+    }
+    if(!pageObj.sort){
+      pageObj.sort = {
+        createTime: '-1'
+      }
     }
     let count = await Message.countDocuments(conditions)
     let docs = await Message.find(conditions,null,pageObj).populate([
-      { path: 'createUser' }
+      { path: 'createUser', select: '_id name createTime avatarId'}
     ])
     if (docs) {
       let data = {

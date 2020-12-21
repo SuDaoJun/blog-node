@@ -14,6 +14,11 @@ class ProjectCtl{
         return utils.responseClient(ctx, RES_CODE.dataFail, "无该功能权限")
       }
     }
+    if(!pageObj.sort){
+      pageObj.sort = {
+        createTime: '-1'
+      }
+    }
     let count = await Project.countDocuments(conditions)
     let docs = await Project.find(conditions,null,pageObj)
     if (docs) {

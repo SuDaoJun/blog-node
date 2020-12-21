@@ -22,6 +22,7 @@ module.exports = app => {
     '/blogPage/article/detail',
     '/blogPage/comment/list',
     '/blogPage/statement/list',
+    '/blogPage/message/list',
     '/blogPage/project/list',
     '/blogPage/link/list'
   ]

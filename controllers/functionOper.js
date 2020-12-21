@@ -9,6 +9,11 @@ class FunctionOperCtl{
     let req = ctx.request
     let conditions =  utils.blurSelect(req.query)
     let pageObj =  utils.pageSelect(req.query)
+    if(!pageObj.sort){
+      pageObj.sort = {
+        createTime: '-1'
+      }
+    }
     let count = await FunctionOper.countDocuments(conditions)
     let docs = await FunctionOper.find(conditions,null,pageObj).populate([
       { path: 'menuId', select: '_id title' }

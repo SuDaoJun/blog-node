@@ -25,6 +25,11 @@ class UserCtl extends BaseController{
     if (userMessage.roleId !== ROLE_TYPE.superRole) {
       conditions.mark = userMessage.mark
     }
+    if(!pageObj.sort){
+      pageObj.sort = {
+        createTime: '-1'
+      }
+    }
     let count = await User.countDocuments(conditions)
     let docs = await User.find(conditions, null, pageObj).populate([
       { path: 'roleId' }
@@ -317,6 +322,18 @@ class UserCtl extends BaseController{
     } else {
       utils.responseClient(ctx, RES_CODE.pwdFail, "密码错误")
     }
+  }
+  // 重置密码
+  async setPwd(ctx){
+    const { userId } = ctx.request.body;
+    let pwd = '123456abc';
+    let user = await User.findById(userId, "+password")
+    if (!user) {
+      return utils.responseClient(ctx, RES_CODE.dataFail, "用户不存在")
+    }
+    let hashPwd = await this.pwdBcrypt(pwd);
+    let docs = await User.findByIdAndUpdate(userId, { password: hashPwd, updateTime: utils.currentDayDate() }, { new: true })
+    docs?utils.responseClient(ctx, RES_CODE.reqSuccess, "重置密码成功"):utils.responseClient(ctx, RES_CODE.statusFail, "重置密码失败")
   }
   // 用户删除
   async userDel(ctx){

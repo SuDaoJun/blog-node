@@ -17,6 +17,11 @@ class MenuCtl extends BaseController{
     if(!userMessage.functionList.includes('5e834ff2fb69305aa091e836')){
       return utils.responseClient(ctx, RES_CODE.dataFail, "无该功能权限")
     }
+    if(!pageObj.sort){
+      pageObj.sort = {
+        createTime: '-1'
+      }
+    }
     let count = await Menu.countDocuments(conditions)
     let docs = await Menu.find(conditions,null,pageObj).populate([
       { path: 'functionList' },
