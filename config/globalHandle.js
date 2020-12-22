@@ -18,6 +18,7 @@ module.exports = app => {
     '/blogPage/statistics/articleArchive',
     '/blogPage/statistics/randomMessage',
     '/blogPage/statistics/randomArticle',
+    '/blogPage/statistics/userHistory',
     '/blogPage/article/list',
     '/blogPage/article/detail',
     '/blogPage/comment/list',
@@ -45,6 +46,12 @@ module.exports = app => {
             utils.responseClient(ctx, HTTP_CODE.unauthorized, 'token不存在', null, HTTP_CODE.unauthorized)
         }
     } else {
+      let token = req.headers.authorization;
+      if(token){
+        let jwt = new JwtUtil(token);
+        let result = jwt.verifyToken();
+        req.tokenMessage = result || '';
+      }
       await next();
     }
   });

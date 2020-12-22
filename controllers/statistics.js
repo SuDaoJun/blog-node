@@ -3,9 +3,11 @@ const AccessUser = require("../models/accessUser")
 const Article = require("../models/article")
 const Message = require("../models/message")
 const Tag = require("../models/tag")
+const History = require("../models/history")
 const CONSTANT = require('../config/constant')
 const RES_CODE = CONSTANT.RES_CODE
 const utils = require('../config/utils')
+const mongoose = require('mongoose');
 
 class StatisticsCtr{
   // 统计用户、文章、留言总数
@@ -542,6 +544,57 @@ class StatisticsCtr{
       },
     ])
     data?utils.responseClient(ctx, RES_CODE.reqSuccess, "随机获取文章成功", data):utils.responseClient(ctx, RES_CODE.dataFail, "随机获取文章失败")
+  }
+  // 用户浏览、点赞和评论历史数据
+  async userHistory(ctx){
+    let req = ctx.request;
+    let { type, userId } = req.query;
+    let pageObj =  utils.pageSelect(req.query);
+    let conditions = {
+      userId: mongoose.Types.ObjectId(userId)
+    }
+    if(type){
+      conditions.type = type;
+    }
+    let count = await History.countDocuments(conditions);
+    let data = await History.aggregate([
+      {
+        $match: conditions
+      },
+      {
+        $lookup: {
+          from: 'article',
+          localField: 'articleId',
+          foreignField: '_id',
+          as: 'article'
+        }
+      },
+      {
+        $project: {
+          updateTime: 1,
+          'article._id': 1,
+          'article.title': 1,
+          'article.description': 1,
+          'article.imgId': 1,
+          'article.meta': 1,
+          'article.createTime': 1
+        }
+      },
+      {
+        $sort: { 'updateTime': -1 }
+      },
+      {
+        $skip: pageObj.skip
+      },
+      {
+        $limit: pageObj.limit
+      }
+    ])
+    let docs = {
+      data,
+      count: count || 0
+    }
+    data?utils.responseClient(ctx, RES_CODE.reqSuccess, "获取用户操作历史统计", docs):utils.responseClient(ctx, RES_CODE.dataFail, "获取用户操作历史失败")
   }
 }
 module.exports = new StatisticsCtr()

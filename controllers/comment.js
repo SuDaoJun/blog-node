@@ -1,11 +1,16 @@
+const BaseController = require('./baseController')
 const Comment = require("../models/comment");
 const Article = require("../models/article");
 const ReplyCommentList = require("../models/replyComment");
+const History = require("../models/history");
 const CONSTANT = require('../config/constant');
 const RES_CODE = CONSTANT.RES_CODE
 const utils = require('../config/utils');
 
-class CommentCtl{
+class CommentCtl extends BaseController{
+  constructor() {
+    super()
+  }
   async commentList(ctx){
     let req = ctx.request
     let conditions = utils.blurSelect(req.query)
@@ -47,7 +52,16 @@ class CommentCtl{
     if (addResult) {
       if(addResult.status === '1'){
         let updateResult = await Article.findByIdAndUpdate(articleId, {$inc: { 'meta.commentTotal': 1}, $push: {commentList: addResult._id }}, { new: true })
-        updateResult ? utils.responseClient(ctx, RES_CODE.reqSuccess, "文章评论新增成功", updateResult) : utils.responseClient(ctx, RES_CODE.dataFail, "文章新增评论失败")
+        if(updateResult){
+          utils.responseClient(ctx, RES_CODE.reqSuccess, "文章评论新增成功", updateResult)
+          this.historyHandle({
+            userId: userMessage.id,
+            articleId,
+            type: '3'
+          })
+        }else{
+          utils.responseClient(ctx, RES_CODE.dataFail, "文章新增评论失败")
+        }
       }else{
         utils.responseClient(ctx, RES_CODE.reqSuccess, "文章评论新增成功", addResult)
       }
@@ -114,16 +128,31 @@ class CommentCtl{
     if (docs) {
       if(docs.status === '1'){
         let updateResult = await Article.findByIdAndUpdate(docs.articleId, {$inc: {'meta.commentTotal': -1}, $pull: {commentList: id}}, { new: true })
-        updateResult ? utils.responseClient(ctx, RES_CODE.reqSuccess, "删除文章评论成功") : utils.responseClient(ctx, RES_CODE.dataFail, "删除文章评论失败")
+        if(updateResult){
+          utils.responseClient(ctx, RES_CODE.reqSuccess, "删除文章评论成功")
+          if(docs.replyCommentList.length > 0){
+            await ReplyCommentList.deleteMany({commentId: id})
+          }
+        }else{
+          utils.responseClient(ctx, RES_CODE.dataFail, "删除文章评论失败")
+        }
       }else{
         utils.responseClient(ctx, RES_CODE.reqSuccess, "删除文章评论成功")
-      }
-      if(docs.replyCommentList.length > 0){
-        await ReplyCommentList.deleteMany({commentId: id})
       }
     } else {
       utils.responseClient(ctx, RES_CODE.dataFail, "删除文章评论失败")
     }
   }
+  async historyHandle(historyData){
+    let historyResult = await History.findOne(historyData)
+    if(historyResult){
+      let updateTimeObj = {
+        updateTime: utils.currentDayDate()
+      }
+      await History.findByIdAndUpdate(historyResult._id, updateTimeObj, {new: true})
+    }else{
+      new History(historyData).save();
+    }
+  }
 }
-module.exports = new CommentCtl()
+module.exports = new CommentCtl().resolve()

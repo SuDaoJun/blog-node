@@ -1,13 +1,18 @@
+const BaseController = require('./baseController')
 const Article = require("../models/article");
 const Tag = require("../models/tag");
 const Comment = require("../models/comment");
+const History = require("../models/history");
 const ReplyComment = require("../models/replyComment");
 const CONSTANT = require('../config/constant');
 const RES_CODE = CONSTANT.RES_CODE
 const ROLE_TYPE = CONSTANT.ROLE_TYPE
 const utils = require('../config/utils');
 
-class ArticleCtl{
+class ArticleCtl extends BaseController{
+  constructor() {
+    super()
+  }
   async articleList(ctx){
     let req = ctx.request
     let conditions =  utils.blurSelect(req.query)
@@ -51,8 +56,10 @@ class ArticleCtl{
     }
   }
   async articleDetail(ctx){
-    let req = ctx.request
-    let doc = await Article.findByIdAndUpdate(req.query.id, {$inc: {'meta.viewTotal': 1}}, {new: true}).populate([
+    let req = ctx.request;
+    let tokenMessage = req.tokenMessage;
+    let articleId = req.query.id;
+    let doc = await Article.findByIdAndUpdate(articleId, {$inc: {'meta.viewTotal': 1}}, {new: true}).populate([
       { path: 'tags', select: '_id name bgColor' },
       { path: 'linkUser', select: '_id avatarId name' },
       { 
@@ -64,6 +71,13 @@ class ArticleCtl{
     ])
     if(doc){
       utils.responseClient(ctx, RES_CODE.reqSuccess, "获取文章详情成功", doc)
+      if(tokenMessage && tokenMessage.userMessage){
+        this.historyHandle({
+          userId: tokenMessage.userMessage.id,
+          articleId,
+          type: '1'
+        })
+      }
     }else{
       utils.responseClient(ctx, RES_CODE.dataFail, "获取文章详情失败")
     }
@@ -103,7 +117,16 @@ class ArticleCtl{
         }
         docs.linkUser.push(userMessage.id);
         let doc = await Article.findByIdAndUpdate(id, {'meta.likeTotal': likeTotal, linkUser: docs.linkUser}, {new: true})
-        doc?utils.responseClient(ctx, RES_CODE.reqSuccess, "文章点赞成功"):utils.responseClient(ctx, RES_CODE.dataFail, "文章点赞失败")
+        if(doc){
+          utils.responseClient(ctx, RES_CODE.reqSuccess, "文章点赞成功")
+          this.historyHandle({
+            userId: userMessage.id,
+            articleId: id,
+            type: '2'
+          })
+        }else{
+          utils.responseClient(ctx, RES_CODE.dataFail, "文章点赞失败")
+        }
       }else{
         utils.responseClient(ctx, RES_CODE.dataFail, "获取文章失败")
       }
@@ -119,7 +142,15 @@ class ArticleCtl{
           return item.toString() !== userMessage.id
         })
         let doc = await Article.findByIdAndUpdate(id, {'meta.likeTotal': likeTotal, linkUser}, {new: true})
-        doc?utils.responseClient(ctx, RES_CODE.reqSuccess, "取消点赞成功"):utils.responseClient(ctx, RES_CODE.dataFail, "取消点赞失败")
+        if(doc){
+          utils.responseClient(ctx, RES_CODE.reqSuccess, "取消点赞成功")
+          await History.findOneAndRemove({
+            type: '2',
+            articleId: id
+          })
+        }else{
+          utils.responseClient(ctx, RES_CODE.dataFail, "取消点赞失败")
+        }
       }else{
         utils.responseClient(ctx, RES_CODE.dataFail, "获取文章失败")
       }
@@ -151,10 +182,21 @@ class ArticleCtl{
       utils.responseClient(ctx, RES_CODE.reqSuccess, "删除文章成功")
       await Comment.deleteMany({articleId: id})
       await ReplyComment.deleteMany({articleId: id})
-      
+      await History.deleteMany({articleId: id})
     }else{
       utils.responseClient(ctx, RES_CODE.dataFail, "删除文章失败")
     }
   }
+  async historyHandle(historyData){
+    let historyResult = await History.findOne(historyData)
+    if(historyResult){
+      let updateTimeObj = {
+        updateTime: utils.currentDayDate()
+      }
+      await History.findByIdAndUpdate(historyResult._id, updateTimeObj, {new: true})
+    }else{
+      new History(historyData).save();
+    }
+  }
 }
-module.exports = new ArticleCtl()
+module.exports = new ArticleCtl().resolve()

@@ -1,10 +1,15 @@
+const BaseController = require('./baseController')
 const replyComment = require("../models/replyComment");
 const Comment = require("../models/comment");
 const CONSTANT = require('../config/constant');
+const History = require("../models/history");
 const RES_CODE = CONSTANT.RES_CODE
 const utils = require('../config/utils');
 
-class ReplyCommentCtl{
+class ReplyCommentCtl extends BaseController{
+  constructor() {
+    super()
+  }
   async replyCommentList(ctx){
     let req = ctx.request
     let conditions = utils.blurSelect(req.query)
@@ -70,7 +75,16 @@ class ReplyCommentCtl{
        ]},
        { path: 'createUser', select: '_id name avatarId' }
      ])
-     updateResult ? utils.responseClient(ctx, RES_CODE.reqSuccess, "回复评论添加成功", updateResult) : utils.responseClient(ctx, RES_CODE.dataFail, "回复评论添加失败")
+     if(updateResult){
+      utils.responseClient(ctx, RES_CODE.reqSuccess, "回复评论添加成功", updateResult)
+      this.historyHandle({
+        userId: userMessage.id,
+        articleId: updateResult.articleId._id,
+        type: '3'
+      })
+     }else{
+      utils.responseClient(ctx, RES_CODE.dataFail, "回复评论添加失败")
+     }
     } else {
       utils.responseClient(ctx, RES_CODE.dataFail, "新增回复评论失败")
     }
@@ -147,5 +161,16 @@ class ReplyCommentCtl{
       utils.responseClient(ctx, RES_CODE.dataFail, "删除回复评论失败")
     }
   }
+  async historyHandle(historyData){
+    let historyResult = await History.findOne(historyData)
+    if(historyResult){
+      let updateTimeObj = {
+        updateTime: utils.currentDayDate()
+      }
+      await History.findByIdAndUpdate(historyResult._id, updateTimeObj, {new: true})
+    }else{
+      new History(historyData).save();
+    }
+  }
 }
-module.exports = new ReplyCommentCtl()
+module.exports = new ReplyCommentCtl().resolve()
