@@ -548,7 +548,8 @@ class StatisticsCtr{
   // 用户浏览、点赞和评论历史数据
   async userHistory(ctx){
     let req = ctx.request;
-    let { type, userId } = req.query;
+    let { type } = req.query;
+    let userId = req.tokenMessage.userMessage.id;
     let pageObj =  utils.pageSelect(req.query);
     let conditions = {
       userId: mongoose.Types.ObjectId(userId)

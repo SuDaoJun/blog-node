@@ -280,7 +280,7 @@ class UserCtl extends BaseController{
         }
       }
     }
-    let docs = await User.findByIdAndUpdate(body.id, conditions, { new: true }).populate([
+    let docs = await User.findByIdAndUpdate(userMessage.id, conditions, { new: true }).populate([
       { path: 'roleId' }
     ])
     docs ? utils.responseClient(ctx, RES_CODE.reqSuccess, "更新用户信息成功", docs) : utils.responseClient(ctx, RES_CODE.dataFail, "更新用户信息失败")
@@ -308,7 +308,9 @@ class UserCtl extends BaseController{
   // 修改密码
   async modifyPwd(ctx){
     let req = ctx.request
-    const { userId, password, newPassword } = req.body;
+    const { password, newPassword } = req.body;
+    let userMessage = ctx.request.tokenMessage.userMessage;
+    let userId = userMessage.id;
     let user = await User.findById(userId, "+password")
     if (!user) {
       return utils.responseClient(ctx, RES_CODE.dataFail, "用户不存在")
