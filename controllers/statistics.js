@@ -597,5 +597,29 @@ class StatisticsCtr{
     }
     data?utils.responseClient(ctx, RES_CODE.reqSuccess, "获取用户操作历史统计", docs):utils.responseClient(ctx, RES_CODE.dataFail, "获取用户操作历史失败")
   }
+  // 文章图片列表
+  async articleImgStatistics(ctx){
+    let req = ctx.request
+    let num = parseInt(req.query.num) || 10
+    let data = await Article.aggregate([
+      {
+        $match: {
+          status: '1'
+        }
+      },
+      {
+        $project: {
+          imgId: 1
+        }
+      },
+      {
+        $sort: { 'createTime': -1 }
+      },
+      {
+        $limit: num
+      }
+    ])
+    data?utils.responseClient(ctx, RES_CODE.reqSuccess, "获取文章图片列表失败", data):utils.responseClient(ctx, RES_CODE.dataFail, "文章图片列表失败")
+  }
 }
 module.exports = new StatisticsCtr()
