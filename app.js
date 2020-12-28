@@ -38,6 +38,7 @@ app.use(bodyparser({
 app.use(json())
 app.use(require('koa-static')(__dirname + '/static'))
 app.use(require('koa-static')(__dirname + '/views'))
+app.use(require('koa-static')(__dirname + '/apidoc'))
 
 // logger
 // app.use(async (ctx, next) => {
