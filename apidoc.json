@@ -32,7 +32,30 @@
     "articleAdd",
     "articleUpdate",
     "articleLike",
-    "articleDel"
+    "articleDel",
+
+    "commentPageList",
+    "commentList",
+    "commentAdd",
+    "commentUpdate",
+    "commentSticky",
+    "commentDel",
+
+    "menuList",
+    "menuTree",
+    "menuAdd",
+    "menuUpdate",
+    "menuDelete",
+    "functionList",
+    "functionAdd",
+    "functionUpdate",
+    "functionDelete",
+
+    "linkList",
+    "linkPageList",
+    "linkAdd",
+    "linkUpdate",
+    "linkDel"
   ],
   "url" : "http://localhost:3000"
 }

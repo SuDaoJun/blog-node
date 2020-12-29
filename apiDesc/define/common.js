@@ -12,6 +12,18 @@
 */
 
 /**
+  * @apiDefine COMMENT 评论模块
+*/
+
+/**
+  * @apiDefine MENUFUNCTION 菜单功能模块
+*/
+
+/**
+  * @apiDefine LINK 链接模块
+*/
+
+/**
  * @apiDefine NOHEADERTOKEN
  * @apiHeader {String} Authorization 无需token认证授权
 */
