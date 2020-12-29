@@ -1,12 +1,11 @@
 const Router = require('koa-router')
 const router =  new Router()
-const { getRandomCode, login, userList, accessUserList, register, userAdd, userUpdate, resetPwd, setPwd, modifyPwd, sendEmail, userDel, pageLogin} = require('../controllers/user')
+const { getRandomCode, login, userList, register, userAdd, userUpdate, resetPwd, setPwd, modifyPwd, sendEmail, userDel, pageLogin} = require('../controllers/user')
 
 const baseUrl = '/blogAdmin'
 const basePageUrl = '/blogPage'
 
 router.get(baseUrl + '/user/list', userList)
-router.get(baseUrl + '/user/accessList', accessUserList)
 router.post(baseUrl + '/user/register', register)
 router.post(baseUrl + '/user/add', userAdd)
 router.put(baseUrl + '/user/update', userUpdate)

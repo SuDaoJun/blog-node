@@ -253,10 +253,10 @@ class UserCtl extends BaseController{
     let body = ctx.request.body
     let conditions = utils.completeSelect(body)
     conditions.updateTime = utils.currentDayDate()
-    let userMessage = ctx.request.tokenMessage.userMessage
+    let userMessageId = body.id || ctx.request.tokenMessage.userMessage
     if (body.name || body.email) {
       let doc = await User.find({ $or: [{ name: body.name }, { email: body.email }] })
-      if (doc.length === 1 && doc[0]._id.toString() !== userMessage.id) {
+      if (doc.length === 1 && doc[0]._id.toString() !== userMessageId) {
         if (doc[0].name === body.name) {
           return utils.responseClient(ctx, RES_CODE.dataAlready, "用户名已存在")
         } else if (doc[0].email === body.email) {
@@ -264,7 +264,7 @@ class UserCtl extends BaseController{
         }
       } else if (doc.length === 2) {
         for (let i = 0; i < doc.length; i++) {
-          if (doc[i]._id.toString() === userMessage.id) {
+          if (doc[i]._id.toString() === userMessageId) {
             if (doc[i].name !== body.name) {
               return utils.responseClient(ctx, RES_CODE.dataAlready, "用户名已存在")
             } else if (doc[i].email !== body.email) {
@@ -280,7 +280,7 @@ class UserCtl extends BaseController{
         }
       }
     }
-    let docs = await User.findByIdAndUpdate(userMessage.id, conditions, { new: true }).populate([
+    let docs = await User.findByIdAndUpdate(userMessageId, conditions, { new: true }).populate([
       { path: 'roleId' }
     ])
     docs ? utils.responseClient(ctx, RES_CODE.reqSuccess, "更新用户信息成功", docs) : utils.responseClient(ctx, RES_CODE.dataFail, "更新用户信息失败")

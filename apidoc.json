@@ -1,7 +1,38 @@
 {
   "name": "ServiceBlogAPIs",
   "version": "1.0.0",
+  "withCompare": false,
   "description": "博客接口文档",
   "title": "博客接口文档",
+  "template": {
+    "withCompare": false,
+    "withGenerator": true
+  },
+  "order": [
+    "headerInfo",
+    "pageInfo",
+
+    "adminLogin",
+    "pageLogin",
+    "sendEmail",
+    "userCode",
+    "registerUser",
+    "addUser",
+    "getUser",
+    "userDel",
+    "updateUser",
+    "modifyPwd",
+    "forgetPwd",
+    "setPwd",
+
+    "articlePageList",
+    "articlePageDetail",
+    "articleList",
+    "articleDetail",
+    "articleAdd",
+    "articleUpdate",
+    "articleLike",
+    "articleDel"
+  ],
   "url" : "http://localhost:3000"
 }
