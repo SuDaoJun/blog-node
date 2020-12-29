@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const  msg = {
-  name: 'sdj',
-  pwd: 'sdj527',
+  name: 'admin',
+  pwd: '123456',
   dbName: 'blogNode'
 }
 const mongodbURI = `mongodb://${msg.name}:${msg.pwd}@localhost:27017/${msg.dbName}`
