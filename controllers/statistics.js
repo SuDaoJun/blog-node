@@ -15,8 +15,8 @@ class StatisticsCtr{
     let data = {}
     data.accessUserTotal = await AccessUser.countDocuments()
     data.userTotal = await User.countDocuments()
-    data.articleTotal = await Article.countDocuments({ status: '1' })
-    data.messageTotal = await Message.countDocuments({ status: '1' })
+    data.articleTotal = await Article.countDocuments()
+    data.messageTotal = await Message.countDocuments()
     utils.responseClient(ctx, RES_CODE.reqSuccess, "获取统计列表成功", data)
   }
   // type: day-日 week-周 month-月 year-年 其它-时间选择

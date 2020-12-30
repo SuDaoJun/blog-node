@@ -55,7 +55,47 @@
     "linkPageList",
     "linkAdd",
     "linkUpdate",
-    "linkDel"
+    "linkDel",
+    
+    "messageList",
+    "messagePageList",
+    "messageAdd",
+    "messagePageAdd",
+    "messageUpdate",
+    "messageDel",
+
+    "projectListParam",
+    "projectAddParam",
+    "projectUpdateParam",
+    "projectDelParam",
+
+    "replyCommentList",
+    "replyCommentAdd",
+    "replyCommentUpdate",
+    "replyCommentDel",
+
+    "statementList",
+    "statementPageList",
+    "statementAdd",
+    "statementUpdate",
+
+    "tagListParam",
+    "tagAddParam",
+    "tagUpdateParam",
+    "tagDelParam",
+
+    "fileDownParam",
+    "fileUploadParam",
+    "fileDelParam",
+
+    "roleUserList",
+    "roleAuthList",
+    "roleMuchUser",
+    "setAuthUpdate",
+    "roleList",
+    "roleAdd",
+    "roleUpdate",
+    "roleDel"
   ],
   "url" : "http://localhost:3000"
 }

@@ -200,7 +200,7 @@ class RoleCtl{
       let docs = await User.update(conditions,doc,{multi: true})
       docs?utils.responseClient(ctx, RES_CODE.reqSuccess, "用户角色操作成功"):utils.responseClient(ctx, RES_CODE.dataFail, "用户角色操作失败")
     }else{
-      utils.responseClient(ctx, RES_CODE.statusFail, "所传用户和角色为空")
+      utils.responseClient(ctx, RES_CODE.statusFail, "所传用户或角色为空")
     }
   }
 }

@@ -24,7 +24,7 @@
 */
 
 /**
- * @api {DELETE} /blogAdmin/del/:id 链接删除
+ * @api {DELETE} /blogAdmin/link/del/:id 链接删除
  * @apiName linkDel
  * @apiGroup LINK
  * @apiUse HEADERTOKEN

@@ -47,27 +47,20 @@ class MessageCtl{
     }
     conditions.createUser = userMessage.id
     let newMessage = new Message(conditions)
-    let docs = await Message.findOne({
-      content: body.content
-    })
-    if (docs) {
-      utils.responseClient(ctx, RES_CODE.dataAlready, "留言内容已存在")
-    } else {
-      let doc = await newMessage.save()
-      if(doc){
-        let data = {
-          _id: doc._id,
-          content: doc.content,
-          createTime: doc.createTime,
-          createUser: [{
-            name: userMessage.name,
-            avatarId: userMessage.avatarId
-          }]
-        }
-        utils.responseClient(ctx, RES_CODE.reqSuccess, "留言新增成功", data)
-      }else{
-        utils.responseClient(ctx, RES_CODE.dataFail, "留言新增失败")
+    let doc = await newMessage.save()
+    if(doc){
+      let data = {
+        _id: doc._id,
+        content: doc.content,
+        createTime: doc.createTime,
+        createUser: [{
+          name: userMessage.name,
+          avatarId: userMessage.avatarId
+        }]
       }
+      utils.responseClient(ctx, RES_CODE.reqSuccess, "留言新增成功", data)
+    }else{
+      utils.responseClient(ctx, RES_CODE.dataFail, "留言新增失败")
     }
   }
   async messageUpdate(ctx){

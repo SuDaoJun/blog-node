@@ -95,7 +95,7 @@ class ReplyCommentCtl extends BaseController{
     if(content){
       let doc = await replyComment.findByIdAndUpdate(replayId, { content }, { new: true })
       doc?utils.responseClient(ctx, RES_CODE.reqSuccess, "回复评论更新成功") : utils.responseClient(ctx, RES_CODE.dataFail, "回复评论更新失败")
-    }else{
+    }else if(status){
       let fineResult = await replyComment.findById(replayId)
       if (fineResult) {
         if(fineResult.status === status){
@@ -125,6 +125,8 @@ class ReplyCommentCtl extends BaseController{
       } else {
         utils.responseClient(ctx, RES_CODE.dataNot, "评论回复id不存在")
       }
+    }else{
+      utils.responseClient(ctx, RES_CODE.dataFail, "回复评论更新失败")
     }
   }
   async replyCommentDel(ctx) {

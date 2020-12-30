@@ -24,6 +24,38 @@
 */
 
 /**
+  * @apiDefine MESSAGE 留言模块
+*/
+
+/**
+  * @apiDefine PROJECT 项目模块
+*/
+
+/**
+  * @apiDefine REPLYCOMMENT 评论回复模块
+*/
+
+/**
+  * @apiDefine STATEMENT 励志语句模块
+*/
+
+/**
+  * @apiDefine TAG 标签模块
+*/
+
+/**
+  * @apiDefine UPLOAD 上传模块
+*/
+
+/**
+  * @apiDefine ROLE 角色模块
+*/
+
+/**
+  * @apiDefine STATISTICS 统计模块
+*/
+
+/**
  * @apiDefine NOHEADERTOKEN
  * @apiHeader {String} Authorization 无需token认证授权
 */

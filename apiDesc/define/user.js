@@ -3,7 +3,7 @@
 /**
  * @apiDefine codeParam
  * @apiSuccessExample 成功返回:
- * svg格式
+ * svg格式文件
 */
 
 /**
