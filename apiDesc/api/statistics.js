@@ -93,7 +93,7 @@
  * @apiName pageTagList
  * @apiGroup STATISTICS
  * @apiUse NOHEADERTOKEN
- * @apiUse pageTagListParam
+ * @apiUse tagListStatisticsParam
 */
 
 /**
@@ -123,7 +123,8 @@
 /**
  * @api {GET} /blogPage/statistics/userHistory 用户操作统计
  * @apiName userHistory
+ * @apiDescription 查看用户浏览、点赞以及评论过的文章
  * @apiGroup STATISTICS
- * @apiUse NOHEADERTOKEN
+ * @apiUse HEADERTOKEN
  * @apiUse userHistoryParam
 */

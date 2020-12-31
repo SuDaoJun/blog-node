@@ -18,7 +18,6 @@ module.exports = app => {
     '/blogPage/statistics/articleArchive',
     '/blogPage/statistics/randomMessage',
     '/blogPage/statistics/randomArticle',
-    '/blogPage/statistics/userHistory',
     '/blogPage/article/list',
     '/blogPage/article/detail',
     '/blogPage/comment/list',

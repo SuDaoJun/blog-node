@@ -95,7 +95,24 @@
     "roleList",
     "roleAdd",
     "roleUpdate",
-    "roleDel"
+    "roleDel",
+
+    "tagListStatistics",
+    "pageTagList",
+    "accessUserListStatistics",
+    "userListStatistics",
+    "articleListStatistics",
+    "messageListStatistics",
+    "articleImgStatistics",
+    "articleArchive",
+    "randomArticle",
+    "randomMessage",
+    "userHistory",
+    "countTotal",
+    "accessUserStatistics",
+    "userStatistics",
+    "articleStatistics",
+    "messageStatistics"
   ],
   "url" : "http://localhost:3000"
 }

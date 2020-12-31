@@ -549,14 +549,15 @@ class StatisticsCtr{
   async userHistory(ctx){
     let req = ctx.request;
     let { type } = req.query;
+    if(!req.tokenMessage){
+      return utils.responseClient(ctx, RES_CODE.dataNot, "用户不存在")
+    }
     let userId = req.tokenMessage.userMessage.id;
     let pageObj =  utils.pageSelect(req.query);
     let conditions = {
       userId: mongoose.Types.ObjectId(userId)
     }
-    if(type){
-      conditions.type = type;
-    }
+    conditions.type = type?type:'1'
     let count = await History.countDocuments(conditions);
     let data = await History.aggregate([
       {
