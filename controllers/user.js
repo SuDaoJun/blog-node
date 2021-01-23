@@ -253,7 +253,7 @@ class UserCtl extends BaseController{
     let body = ctx.request.body
     let conditions = utils.completeSelect(body)
     conditions.updateTime = utils.currentDayDate()
-    let userMessageId = body.id || ctx.request.tokenMessage.userMessage
+    let userMessageId = body.id || ctx.request.tokenMessage.userMessage.id
     if (body.name || body.email) {
       let doc = await User.find({ $or: [{ name: body.name }, { email: body.email }] })
       if (doc.length === 1 && doc[0]._id.toString() !== userMessageId) {
