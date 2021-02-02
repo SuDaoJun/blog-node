@@ -99,24 +99,22 @@ class UserCtl extends BaseController{
       utils.responseClient(ctx, RES_CODE.reqSuccess, "登录成功", data)
       let accessTime = utils.currentDayDate().split(' ')[0]
       let doc = await AccessUser.find({ userName:  user.name})
-      if(!doc){
-        if (doc.length > 0) {
-          let timeArr = []
-          doc.forEach((item)=>{
-            timeArr.push(item.accessTime.split(' ')[0])
-          })
-          if (!timeArr.includes(accessTime)) {
-           let newAccessUser = new AccessUser({
-             userName: user.name
-           })
-           newAccessUser.save()
-          }
-        } else {
-          let newAccessUser = new AccessUser({
-            userName: user.name
-          })
-          newAccessUser.save()
+      if (doc.length > 0) {
+        let timeArr = []
+        doc.forEach((item)=>{
+          timeArr.push(item.accessTime.split(' ')[0])
+        })
+        if (!timeArr.includes(accessTime)) {
+         let newAccessUser = new AccessUser({
+           userName: user.name
+         })
+         newAccessUser.save()
         }
+      } else {
+        let newAccessUser = new AccessUser({
+          userName: user.name
+        })
+        newAccessUser.save()
       }
     } else {
       utils.responseClient(ctx, RES_CODE.pwdFail, "密码错误")
