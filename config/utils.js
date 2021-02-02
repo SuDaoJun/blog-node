@@ -38,8 +38,8 @@ function blurSelect(obj){
           let arr = obj[attr].split(',')
           if(arr.length === 2){
             conditions[attr] = {
-              "$gte": arr[0],
-              "$lte": arr[1]
+              "$gte": arr[0].indexOf('00:00:00') > -1?arr[0]:arr[0] + ' 00:00:00',
+              "$lte": arr[1].indexOf('23:59:59') > -1?arr[1]:arr[1] + ' 23:59:59'
             }
           }
         }else{
