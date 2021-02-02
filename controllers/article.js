@@ -160,7 +160,9 @@ class ArticleCtl extends BaseController{
     let req = ctx.request
     let body = req.body
     let conditions =  utils.completeSelect(body)
-    conditions.tags = conditions.tags?conditions.tags.split(','):[]
+    if(conditions.tags){
+      conditions.tags = conditions.tags.split(',')
+    }
     let doc = await Article.find({
       title: body.title
     })
