@@ -134,7 +134,7 @@ class RoleCtl{
     let doc = await Role.findById(id)
     if(doc){
       if(doc.type === '4'){
-        let docs = await Role.findByIdAndRemove(req.params.id)
+        let docs = await Role.findByIdAndRemove(id)
         docs?utils.responseClient(ctx, RES_CODE.reqSuccess, "删除角色成功"):utils.responseClient(ctx, RES_CODE.dataFail, "删除角色失败")
       }else{
         utils.responseClient(ctx, RES_CODE.statusFail, "该角色暂不支持删除")
