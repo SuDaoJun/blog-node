@@ -1,73 +1,62 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var fs = require('fs');
-var FileStreamRotator = require('file-stream-rotator');
-// var logger = require('morgan');
-const bodyParser = require("body-parser");
-const ejs = require('ejs');
-const HTTP_CODE = require("./config/constant").HTTP_CODE;
-const utils = require('./config/utils');
-// 前端使用history模式
-let history = require('connect-history-api-fallback');
-let app = express();
-app.use(history({
-  htmlAcceptHeaders: ['text/html', 'application/xhtml+xml']
-}))
+const Koa = require('koa')
+const app = new Koa()
+const json = require('koa-json')
+const onerror = require('koa-onerror')
+const bodyparser = require('koa-body')
+const cors = require('koa2-cors')
+// const history = require('connect-history-api-fallback')
+const router = require('./routers')
+const logger = require("koa-logger"); 
+const utils = require('./config/utils')
 
-//设置静态文件托管放于全局接口拦截之前，避免验证token
-app.use(express.static(path.join(__dirname, 'views')));
-// 文件上传static
-app.use('/static',express.static(path.join(__dirname,"/static")))
-// 中间件
-app.use(bodyParser.json({limit: '30mb'}));   //处理json数据
-app.use(bodyParser.urlencoded({limit: '30mb', extended:true}));  //处理 form 表单数据
-//记录日志
-const log = require('./config/logConfig.js')
-log.use(app)
-// let logDirectory = __dirname + '/public/log';
-// fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
-// let accessLogStream = FileStreamRotator.getStream({
-//   date_format: 'YYYY-MM-DD',
-//   filename: logDirectory + '/%DATE%.log',
-//   frequency: 'daily',
-//   verbose: false
-// });
-// app.use(logger('dev'));
-// app.use(logger('combined', {stream: accessLogStream}));
+// 跨域处理
+app.use(
+  cors({
+      origin: function(ctx) { //设置允许来自指定域名请求
+          return '*'; //只允许http://localhost:3000这个域名的请求
+      },
+      maxAge: 5, //指定本次预检请求的有效期，单位为秒。
+      credentials: false, //是否允许发送Cookie
+      allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], //设置所允许的HTTP请求方法
+      allowHeaders: ['Content-Type', 'Authorization', 'Accept'], //设置服务器支持的所有头信息字段
+      exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'] //设置获取其他自定义字段
+  })
+)
+app.use(logger());
+// error handler
+onerror(app)
+// 前端使用history模式
+// app.use(history({
+//   htmlAcceptHeaders: ['text/html', 'application/xhtml+xml']
+// }))
+// middlewares
+app.use(bodyparser({
+  multipart:true,
+  jsonLimit: '30mb',
+  formLimit: '30mb',
+}))
+app.use(json())
+app.use(require('koa-static')(__dirname + '/static'))
+app.use(require('koa-static')(__dirname + '/views'))
+app.use(require('koa-static')(__dirname + '/apidoc'))
+
+// logger
+// app.use(async (ctx, next) => {
+//   const start = new Date()
+//   await next()
+//   const ms = new Date() - start
+//   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
+// })
 
 // 配置
-require("./config/globalHandle")(app);   // 全局接口拦截来设置cors跨域和检查token
-require("./config/connect");   // MongoDB数据库连接
+require("./config/globalHandle")(app)   // 检查token
+require("./config/connect")   // MongoDB数据库连接
 
-// view engine setup 设置模板引擎的存放目录与用的什么模板引擎
-// app.set('views', path.join(__dirname, 'views/'));
-// app.engine('.html', ejs.renderFile);
-// app.set('view engine', 'html');
-
-//将路由文件引入
-const route = require('./routes/index');
-
-//初始化所有路由
-route(app);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(HTTP_CODE.notFound));
+// 初始化路由
+router(app)
+// error-handling
+app.on('error', (err, ctx) => {
+  utils.severErr(err, ctx)
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  console.log(err)
-  utils.severErr(err, res)
-  // res.status(err.status || HTTP_CODE.severError);
-  // res.render('error');
-});
-
-
-module.exports = app;
+module.exports = app

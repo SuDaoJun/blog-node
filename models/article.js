@@ -24,14 +24,14 @@ const articleSchema = new Schema(
       default: '0',
       enum: ['0', '1']
     },
+    // markdown内容
+    markContent: {
+      type: String
+    },
+    // 富文本
     content: {
       type: String,
       required: true
-    },
-    // markdown内容
-    markContent: {
-      type: String,
-      default: ''
     },
     // 封面图片
     imgId: {

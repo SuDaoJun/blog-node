@@ -4,26 +4,25 @@ const CONSTANT = require('./constant');
 const svgCaptcha = require("svg-captcha");
 const RES_CODE = CONSTANT.RES_CODE;
 const HTTP_CODE = CONSTANT.HTTP_CODE;
-const logger = require('./logConfig').logger;
 
 // 响应客户端
-function responseClient(res, code = RES_CODE.dataFail, msg = "服务器错误", data = null,httpCode = HTTP_CODE.ok) {
+function responseClient(ctx, code = RES_CODE.dataFail, msg = "服务器错误", data = null,httpCode = HTTP_CODE.ok) {
   let responseData = {};
   responseData.code = code;
   responseData.msg = msg;
   responseData.data = data;
-  res.status(httpCode).json(responseData);
+  ctx.status = httpCode
+  ctx.body = responseData
 }
 // 错误请求返回
-function severErr(err, res) {
-  console.log(err)
-  logger.error(err)
+function severErr(err, ctx) {
   let errObj = {
     msg: '服务器错误',
     code: HTTP_CODE.severError,
     data: err
   }
-  res.status(HTTP_CODE.severError).json(errObj);
+  ctx.status = HTTP_CODE.severError
+  ctx.body = errObj
 }
 
 let ignoreAttr = ['currentPage', 'pageSize', 'sortBy', 'sortOrders']
@@ -39,8 +38,8 @@ function blurSelect(obj){
           let arr = obj[attr].split(',')
           if(arr.length === 2){
             conditions[attr] = {
-              "$gte": arr[0],
-              "$lte": arr[1]
+              "$gte": arr[0].indexOf('00:00:00') > -1?arr[0]:arr[0] + ' 00:00:00',
+              "$lte": arr[1].indexOf('23:59:59') > -1?arr[1]:arr[1] + ' 23:59:59'
             }
           }
         }else{
@@ -112,6 +111,14 @@ function objProp(data, path){
     }
   }
   return data
+}
+// 转化时间戳
+function timeValue(time = '') {
+  if(time){
+    return moment(time).valueOf()
+  }else{
+    return moment().valueOf()
+  }
 }
 // 当前时间
 function currentDayDate(type = 'time'){
@@ -220,6 +227,7 @@ module.exports = {
   sendEmail,
   currentDayDate,
   timeDiff,
+  timeValue,
   weekArry,
   weekFirstLast,
   monthFirstLast,
