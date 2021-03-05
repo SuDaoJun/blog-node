@@ -77,22 +77,32 @@
 
 ```
 数据库mongodb安装，mongodb按教程安装下载，然后配置：
+
 1、下载mongodb在D:\mongodb位置（自定义），data文件夹下新建db文件夹
+
 2、在D:\mongodb\bin中执行.\mongod --dbpath D:\mongodb\data\db，查看是否安装成功
+
 3、配置文件安装服务，mongod -config " D:\mongodb\bin\mongod.cfg" -install -serviceName "MongoDB"
+
 4、在D:\mongodb\bin中执行./mongo或配置系统变量使用mongo来创建超级用户：
 use admin
 db.createUser({user:"admin",pwd:"123456",roles:["root"]})
+
 5、新建数据库：
 use blogNode
 db.createUser({user:"admin",pwd:"123456",roles:[{role:"dbOwner",db:"blogNode"}]})
 (dbOwner：该数据库的所有者，具有该数据库的全部权限)
+
 6、在mongod.cfg中配置需要权限认证，重启服务
 security:
   authorization: enabled
+
 7、安装navicat for mongodb 可视化数据库，导入恢复mongodb的数据  
+
 8、全局安装npm install -g nodemon来监听重启
+
 9、安装依赖，npm install
+
 10、启动服务，npm run dev，默认端口3000
 
 ```
