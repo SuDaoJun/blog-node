@@ -1,4 +1,4 @@
-{
+define({
   "name": "ServiceBlogAPIs",
   "version": "1.0.0",
   "description": "博客接口文档",
@@ -7,11 +7,10 @@
     "withCompare": false,
     "withGenerator": true
   },
-  "url" : "http://localhost:3000",
+  "url": "http://localhost:3000",
   "order": [
     "headerInfo",
     "pageInfo",
-
     "adminLogin",
     "pageLogin",
     "sendEmail",
@@ -24,7 +23,6 @@
     "modifyPwd",
     "forgetPwd",
     "setPwd",
-
     "articlePageList",
     "articlePageDetail",
     "articleList",
@@ -33,14 +31,12 @@
     "articleUpdate",
     "articleLike",
     "articleDel",
-
     "commentPageList",
     "commentList",
     "commentAdd",
     "commentUpdate",
     "commentSticky",
     "commentDel",
-
     "menuList",
     "menuTree",
     "menuAdd",
@@ -50,44 +46,36 @@
     "functionAdd",
     "functionUpdate",
     "functionDelete",
-
     "linkList",
     "linkPageList",
     "linkAdd",
     "linkUpdate",
     "linkDel",
-    
     "messageList",
     "messagePageList",
     "messageAdd",
     "messagePageAdd",
     "messageUpdate",
     "messageDel",
-
     "projectListParam",
     "projectAddParam",
     "projectUpdateParam",
     "projectDelParam",
-
     "replyCommentList",
     "replyCommentAdd",
     "replyCommentUpdate",
     "replyCommentDel",
-
     "statementList",
     "statementPageList",
     "statementAdd",
     "statementUpdate",
-
     "tagListParam",
     "tagAddParam",
     "tagUpdateParam",
     "tagDelParam",
-
     "fileDownParam",
     "fileUploadParam",
     "fileDelParam",
-
     "roleUserList",
     "roleAuthList",
     "roleMuchUser",
@@ -96,7 +84,6 @@
     "roleAdd",
     "roleUpdate",
     "roleDel",
-
     "tagListStatistics",
     "pageTagList",
     "accessUserListStatistics",
@@ -113,5 +100,14 @@
     "userStatistics",
     "articleStatistics",
     "messageStatistics"
-  ]
-}
+  ],
+  "sampleUrl": false,
+  "defaultVersion": "0.0.0",
+  "apidoc": "0.3.0",
+  "generator": {
+    "name": "apidoc",
+    "time": "2021-03-05T09:44:25.292Z",
+    "url": "https://apidocjs.com",
+    "version": "0.25.0"
+  }
+});
